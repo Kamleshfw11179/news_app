@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Document</title>
+</head>
+<body>
+    <div id="nav"></div>
+    <div id="input">
+        <label>Please enter to search latest news.</label>
+        <input type="text" id='input1' oninput="getSnews()">
+    </div>
+    <div id="sidebar"></div>
+    <div id="data">
+
+    </div>
+    <script type="module">
+        // Adding navBar component;
+        import navB from "./components/navBar.js";
+        document.getElementById("nav").innerHTML=navB();
+        import sidebar from "./components/sidebar.js"
+        sidebar();
+    </script>
+    <script>
+        async function getSnews(){
+            let search = document.getElementById("input1").value;
+            document.getElementById("data").innerHTML=null;
+            if(search.length>2){
+                var data = await fetch(`https://newsapi.org/v2/everything?q=${search}&apiKey=7db9281a78d44813a3a0d19b3d7b33bf`)
+                var data1 = await(data.json())
+                let arr = data1.articles;
+                console.log(arr)
+                arr.forEach(element => {
+                    let {author,description,publishedAt,title,urlToImage} = element;
+                    let div0 = document.createElement("div");
+                    let div1 =document.createElement("div");
+                    let div2 = document.createElement("div");
+                    let div3 = document.createElement("div");
+                    let head = document.createElement("h2");
+                    head.innerText=title;
+                    let auth = document.createElement("h4");
+                    auth.innerText=author;
+                    let date = document.createElement("p");
+                    date.innerText=publishedAt
+                    div1.append(head,auth,date);
+                    div1.setAttribute("class","div1")
+                    div2.setAttribute("class","div2")
+                    div3.setAttribute("class","div3")
+                    let info = document.createElement("h3");
+                    info.innerText=description;
+                    div2.append(info);
+                    let img = document.createElement("img");
+                    img.src = urlToImage;
+                    div3.append(img);
+                    div0.append(div1,div2,div3);
+                    div0.setAttribute("id","bigDiv")
+                    document.getElementById("data").append(div0)
+                });
+                
+            }
+        }
+    
+    </script>
+</body>
+</html>
